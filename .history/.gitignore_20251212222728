@@ -1,0 +1,86 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.angular/
+
+# IDE and editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Uploads (production files)
+uploads/
+!uploads/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Compiled JavaScript
+*.js.map
+
+# Angular cache
+.angular/
+
+# Lock files (optional - uncomment if you want to track)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Docker
+*.tar
+
+# Secrets and certificates
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# Database
+*.sql.gz
+*.dump
+
+# Misc
+*.bak
+*.backup
+.cache/

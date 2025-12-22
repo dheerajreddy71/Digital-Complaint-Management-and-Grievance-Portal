@@ -1,0 +1,210 @@
+<ng-container *ngIf="!isAuthRoute(); else authLayout">
+	<mat-sidenav-container
+		class="app-container"
+		[class.dark-mode]="themeService.isDarkMode$ | async"
+	>
+		<!-- Sidenav -->
+		<mat-sidenav
+			#sidenav
+			[mode]="isMobile ? 'over' : 'side'"
+			[opened]="isSidenavOpen && isLoggedIn"
+			class="app-sidenav"
+		>
+			<div class="sidenav-header">
+				<mat-icon class="logo-icon">support_agent</mat-icon>
+				<span class="logo-text">Complaint Portal</span>
+			</div>
+
+			<mat-nav-list class="nav-list">
+				<a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+					<mat-icon matListItemIcon>dashboard</mat-icon>
+					<span matListItemTitle>Dashboard</span>
+				</a>
+
+				<a mat-list-item routerLink="/complaints" routerLinkActive="active">
+					<mat-icon matListItemIcon>report_problem</mat-icon>
+					<span matListItemTitle>My Complaints</span>
+				</a>
+
+				<a
+					mat-list-item
+					routerLink="/complaints/new"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'citizen'"
+				>
+					<mat-icon matListItemIcon>add_circle</mat-icon>
+					<span matListItemTitle>New Complaint</span>
+				</a>
+
+				<mat-divider
+					*ngIf="getUserRole() === 'staff' || getUserRole() === 'admin'"
+				></mat-divider>
+
+				<a
+					mat-list-item
+					routerLink="/staff/queue"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'staff' || getUserRole() === 'admin'"
+				>
+					<mat-icon matListItemIcon>inbox</mat-icon>
+					<span matListItemTitle>My Queue</span>
+				</a>
+
+				<a
+					mat-list-item
+					routerLink="/staff/assigned"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'staff' || getUserRole() === 'admin'"
+				>
+					<mat-icon matListItemIcon>assignment_ind</mat-icon>
+					<span matListItemTitle>Assigned to Me</span>
+				</a>
+
+				<mat-divider *ngIf="getUserRole() === 'admin'"></mat-divider>
+
+				<a
+					mat-list-item
+					routerLink="/admin/analytics"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'admin'"
+				>
+					<mat-icon matListItemIcon>analytics</mat-icon>
+					<span matListItemTitle>Analytics</span>
+				</a>
+
+				<a
+					mat-list-item
+					routerLink="/admin/users"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'admin'"
+				>
+					<mat-icon matListItemIcon>people</mat-icon>
+					<span matListItemTitle>Users</span>
+				</a>
+
+				<a
+					mat-list-item
+					routerLink="/admin/staff"
+					routerLinkActive="active"
+					*ngIf="getUserRole() === 'admin'"
+				>
+					<mat-icon matListItemIcon>supervisor_account</mat-icon>
+					<span matListItemTitle>Staff Management</span>
+				</a>
+			</mat-nav-list>
+
+			<div class="sidenav-footer">
+				<mat-divider></mat-divider>
+				<a mat-list-item routerLink="/profile" routerLinkActive="active">
+					<mat-icon matListItemIcon>person</mat-icon>
+					<span matListItemTitle>Profile</span>
+				</a>
+				<a mat-list-item (click)="logout()">
+					<mat-icon matListItemIcon>logout</mat-icon>
+					<span matListItemTitle>Logout</span>
+				</a>
+			</div>
+		</mat-sidenav>
+
+		<!-- Main content -->
+		<mat-sidenav-content class="app-content">
+			<!-- Toolbar -->
+			<mat-toolbar color="primary" class="app-toolbar">
+				<button
+					mat-icon-button
+					(click)="toggleSidenav()"
+					*ngIf="isLoggedIn"
+					aria-label="Toggle menu"
+				>
+					<mat-icon>menu</mat-icon>
+				</button>
+
+				<span class="toolbar-title" *ngIf="isMobile || !isLoggedIn"
+					>Complaint Portal</span
+				>
+
+				<span class="spacer"></span>
+
+				<ng-container *ngIf="isLoggedIn">
+					<button
+						mat-icon-button
+						routerLink="/notifications"
+						class="notification-badge"
+						aria-label="Notifications"
+					>
+						<mat-icon>notifications</mat-icon>
+						<span class="badge" *ngIf="unreadCount > 0">
+							{{ unreadCount > 99 ? "99+" : unreadCount }}
+						</span>
+					</button>
+
+					<button
+						mat-icon-button
+						(click)="toggleTheme()"
+						[attr.aria-label]="
+							(themeService.isDarkMode$ | async)
+								? 'Switch to light mode'
+								: 'Switch to dark mode'
+						"
+					>
+						<mat-icon>{{
+							(themeService.isDarkMode$ | async) ? "light_mode" : "dark_mode"
+						}}</mat-icon>
+					</button>
+
+					<button
+						mat-button
+						[matMenuTriggerFor]="userMenu"
+						class="user-menu-button"
+					>
+						<mat-icon>account_circle</mat-icon>
+						<span class="user-name" *ngIf="!isMobile">{{ getUserName() }}</span>
+						<mat-icon>arrow_drop_down</mat-icon>
+					</button>
+
+					<mat-menu #userMenu="matMenu">
+						<button mat-menu-item routerLink="/profile">
+							<mat-icon>person</mat-icon>
+							<span>Profile</span>
+						</button>
+						<mat-divider></mat-divider>
+						<button mat-menu-item (click)="logout()">
+							<mat-icon>logout</mat-icon>
+							<span>Logout</span>
+						</button>
+					</mat-menu>
+				</ng-container>
+			</mat-toolbar>
+
+			<!-- Router outlet -->
+			<main class="main-content">
+				<router-outlet></router-outlet>
+			</main>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</ng-container>
+
+<!-- Auth layout (no sidenav) -->
+<ng-template #authLayout>
+	<div
+		class="auth-container"
+		[class.dark-mode]="themeService.isDarkMode$ | async"
+	>
+		<div class="auth-theme-toggle">
+			<button
+				mat-icon-button
+				(click)="toggleTheme()"
+				[attr.aria-label]="
+					(themeService.isDarkMode$ | async)
+						? 'Switch to light mode'
+						: 'Switch to dark mode'
+				"
+			>
+				<mat-icon>{{
+					(themeService.isDarkMode$ | async) ? "light_mode" : "dark_mode"
+				}}</mat-icon>
+			</button>
+		</div>
+		<router-outlet></router-outlet>
+	</div>
+</ng-template>

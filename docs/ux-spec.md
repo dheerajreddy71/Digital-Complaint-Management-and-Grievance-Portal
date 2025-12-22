@@ -1,0 +1,537 @@
+# UX Specification Document
+
+## Overview
+
+This document outlines the user experience specifications for the Digital Complaint Management & Grievance Portal. The design follows modern 2025 UI/UX principles including glassmorphism effects, microinteractions, and responsive mobile-first design.
+
+---
+
+## Design System
+
+### Color Palette
+
+#### Light Theme
+
+| Role           | Color              | Usage                    |
+| -------------- | ------------------ | ------------------------ |
+| Primary        | `#3f51b5` (Indigo) | Main actions, navigation |
+| Accent         | `#ff4081` (Pink)   | Highlights, CTAs         |
+| Success        | `#4caf50` (Green)  | Resolved, success states |
+| Warning        | `#ff9800` (Orange) | Pending, warnings        |
+| Error          | `#f44336` (Red)    | Errors, critical items   |
+| Background     | `#fafafa`          | Page background          |
+| Surface        | `#ffffff`          | Cards, dialogs           |
+| Text Primary   | `#212121`          | Headings, body text      |
+| Text Secondary | `#757575`          | Labels, hints            |
+
+#### Dark Theme
+
+| Role           | Color                    | Usage               |
+| -------------- | ------------------------ | ------------------- |
+| Primary        | `#7986cb` (Light Indigo) | Main actions        |
+| Accent         | `#ff80ab` (Light Pink)   | Highlights          |
+| Background     | `#121212`                | Page background     |
+| Surface        | `#1e1e1e`                | Cards, dialogs      |
+| Text Primary   | `#e0e0e0`                | Headings, body text |
+| Text Secondary | `#9e9e9e`                | Labels, hints       |
+
+### Typography
+
+| Element | Font   | Size | Weight |
+| ------- | ------ | ---- | ------ |
+| H1      | Roboto | 28px | 500    |
+| H2      | Roboto | 24px | 500    |
+| H3      | Roboto | 20px | 500    |
+| H4      | Roboto | 18px | 500    |
+| Body    | Roboto | 14px | 400    |
+| Caption | Roboto | 12px | 400    |
+| Button  | Roboto | 14px | 500    |
+
+### Spacing Scale
+
+| Token | Value | Usage              |
+| ----- | ----- | ------------------ |
+| xs    | 4px   | Tight spacing      |
+| sm    | 8px   | Component internal |
+| md    | 16px  | Standard gaps      |
+| lg    | 24px  | Section spacing    |
+| xl    | 32px  | Large sections     |
+| 2xl   | 48px  | Page margins       |
+
+### Border Radius
+
+| Token | Value | Usage           |
+| ----- | ----- | --------------- |
+| sm    | 4px   | Chips, badges   |
+| md    | 8px   | Buttons, inputs |
+| lg    | 12px  | Cards           |
+| xl    | 16px  | Modals          |
+| full  | 50%   | Avatars, icons  |
+
+### Shadows
+
+| Level | Value                          | Usage             |
+| ----- | ------------------------------ | ----------------- |
+| sm    | `0 1px 3px rgba(0,0,0,0.12)`   | Subtle elevation  |
+| md    | `0 4px 6px rgba(0,0,0,0.1)`    | Cards             |
+| lg    | `0 10px 20px rgba(0,0,0,0.15)` | Modals, dropdowns |
+
+---
+
+## Page Layouts
+
+### Responsive Breakpoints
+
+| Breakpoint | Width   | Target                     |
+| ---------- | ------- | -------------------------- |
+| Mobile S   | 320px   | Small phones               |
+| Mobile M   | 375px   | Standard phones            |
+| Mobile L   | 414px   | Large phones               |
+| Tablet     | 768px   | Tablets, portrait          |
+| Laptop     | 1024px  | Laptops, tablets landscape |
+| Desktop    | 1280px  | Desktops                   |
+| Large      | 1440px+ | Large monitors             |
+
+### Layout Structure
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                           Header (64px)                          │
+│  ┌──────┐  ┌─────────────────────────────┐  ┌─────────────────┐ │
+│  │ Logo │  │        Navigation           │  │ User Menu       │ │
+│  └──────┘  └─────────────────────────────┘  └─────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌───────────┐  ┌─────────────────────────────────────────────┐ │
+│  │           │  │                                             │ │
+│  │  Sidebar  │  │               Main Content                  │ │
+│  │  (250px)  │  │                                             │ │
+│  │           │  │                                             │ │
+│  │ - Home    │  │                                             │ │
+│  │ - Dash    │  │                                             │ │
+│  │ - Compla  │  │                                             │ │
+│  │ - Admin   │  │                                             │ │
+│  │           │  │                                             │ │
+│  └───────────┘  └─────────────────────────────────────────────┘ │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Mobile Layout
+
+```
+┌──────────────────────────────┐
+│         Header (56px)        │
+│  ┌────┐              ┌────┐  │
+│  │ ≡  │    Logo      │ 🔔 │  │
+│  └────┘              └────┘  │
+├──────────────────────────────┤
+│                              │
+│                              │
+│       Main Content           │
+│       (Full Width)           │
+│                              │
+│                              │
+│                              │
+├──────────────────────────────┤
+│      Bottom Navigation       │
+│  🏠    📋    ➕    👤    ⚙️   │
+└──────────────────────────────┘
+```
+
+---
+
+## User Flows
+
+### 1. Citizen: Submit Complaint
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│    Login     │────►│  Dashboard   │────►│ New Complaint│
+│              │     │              │     │    Form      │
+└──────────────┘     └──────────────┘     └──────────────┘
+                                                │
+                                                ▼
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Track via   │◄────│   Success    │◄────│   Review &   │
+│ Tracking ID  │     │ Confirmation │     │    Submit    │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+**Form Steps:**
+
+1. Category Selection (cards with icons)
+2. Details Entry (title, description, location)
+3. Priority & Attachments (optional files)
+4. Review & Submit
+
+### 2. Staff: Process Complaint
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Work Queue  │────►│   View       │────►│   Update     │
+│  (Pick Up)   │     │   Details    │     │   Status     │
+└──────────────┘     └──────────────┘     └──────────────┘
+                           │                     │
+                           ▼                     ▼
+                    ┌──────────────┐     ┌──────────────┐
+                    │ Add Comments │     │   Resolve    │
+                    │ (Internal/   │     │  & Close     │
+                    │  Public)     │     │              │
+                    └──────────────┘     └──────────────┘
+```
+
+### 3. Admin: System Management
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Overview    │────►│ User Mgmt    │────►│  Analytics   │
+│  Dashboard   │     │              │     │  Dashboard   │
+└──────────────┘     └──────────────┘     └──────────────┘
+       │                    │                    │
+       ▼                    ▼                    ▼
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│ Staff Assign │     │ Role Changes │     │  SLA Reports │
+│ & Monitor    │     │ & Activate   │     │  & Trends    │
+└──────────────┘     └──────────────┘     └──────────────┘
+```
+
+---
+
+## Component Specifications
+
+### Cards
+
+**Complaint Card:**
+
+```
+┌─────────────────────────────────────────────────┐
+│ ┌────────┐                                      │
+│ │Priority│  #CMP-2024-00123             ⋮ Menu  │
+│ │ Badge  │                                      │
+│ └────────┘                                      │
+│                                                 │
+│ Street Light Not Working on Main Street         │
+│                                                 │
+│ ┌────────┐ ┌────────────┐ ┌─────────────────┐  │
+│ │ Status │ │  Category  │ │    Due Date     │  │
+│ │In Prog │ │Infrastructure│ │  2 days left   │  │
+│ └────────┘ └────────────┘ └─────────────────┘  │
+│                                                 │
+│ 📅 Jan 15, 2024    👤 Assigned: Jane Smith      │
+└─────────────────────────────────────────────────┘
+```
+
+**Stat Card:**
+
+```
+┌───────────────────────────┐
+│    ┌─────────────────┐    │
+│    │    📊           │    │
+│    │                 │    │
+│    │     245         │    │
+│    │                 │    │
+│    │  Total Open     │    │
+│    │  Complaints     │    │
+│    └─────────────────┘    │
+│                           │
+│    ↑ 12% vs last week     │
+└───────────────────────────┘
+```
+
+### Forms
+
+**Input Field:**
+
+```
+┌─────────────────────────────────────────────────┐
+│  Title *                                        │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ Enter complaint title...                    │ │
+│ └─────────────────────────────────────────────┘ │
+│  ✓ 5 characters minimum                        │
+└─────────────────────────────────────────────────┘
+```
+
+**Form States:**
+
+- Default: Gray border, placeholder text
+- Focus: Primary color border, shadow
+- Filled: Dark border, filled text
+- Error: Red border, error message below
+- Disabled: Gray background, no interaction
+
+### Buttons
+
+| Type      | Style                   | Usage                         |
+| --------- | ----------------------- | ----------------------------- |
+| Primary   | Filled, primary color   | Main actions (Submit, Save)   |
+| Secondary | Outlined, primary color | Alternative actions (Cancel)  |
+| Tertiary  | Text only               | Low emphasis actions          |
+| FAB       | Floating circle         | Quick actions (New Complaint) |
+| Icon      | Icon only               | Toolbar actions               |
+
+**Button States:**
+
+- Default: Normal colors
+- Hover: Slight darken, elevation
+- Pressed: Darker, ripple effect
+- Disabled: 50% opacity, no cursor
+- Loading: Spinner replaces text
+
+### Status Badges
+
+| Status      | Color            | Icon |
+| ----------- | ---------------- | ---- |
+| Pending     | Orange (#ff9800) | ⏳   |
+| In Progress | Blue (#2196f3)   | 🔄   |
+| Resolved    | Green (#4caf50)  | ✓    |
+| Closed      | Gray (#9e9e9e)   | ✕    |
+| Overdue     | Red (#f44336)    | ⚠    |
+
+### Priority Indicators
+
+| Priority | Color  | Visual                    |
+| -------- | ------ | ------------------------- |
+| Critical | Red    | Solid filled badge + icon |
+| High     | Orange | Filled badge              |
+| Medium   | Yellow | Outlined badge            |
+| Low      | Green  | Text only                 |
+
+---
+
+## Microinteractions
+
+### Loading States
+
+1. **Skeleton Screens**: Gray animated placeholders while content loads
+2. **Spinners**: Circular indeterminate for quick operations
+3. **Progress Bars**: Linear for file uploads with percentage
+4. **Button Loading**: Spinner replaces button text
+
+### Transitions
+
+| Action        | Animation            | Duration |
+| ------------- | -------------------- | -------- |
+| Page Change   | Fade + Slide         | 300ms    |
+| Modal Open    | Scale + Fade         | 200ms    |
+| Modal Close   | Fade                 | 150ms    |
+| Card Hover    | Translate Y + Shadow | 200ms    |
+| Ripple Effect | Radial expand        | 400ms    |
+| Toast Appear  | Slide from bottom    | 250ms    |
+
+### Feedback
+
+1. **Success**: Green toast, checkmark animation
+2. **Error**: Red toast, shake animation
+3. **Warning**: Orange toast, attention icon
+4. **Info**: Blue toast, info icon
+
+---
+
+## Accessibility (a11y)
+
+### WCAG 2.1 AA Compliance
+
+| Requirement         | Implementation                     |
+| ------------------- | ---------------------------------- |
+| Color Contrast      | 4.5:1 for text, 3:1 for large text |
+| Focus Indicators    | 2px solid outline on focus         |
+| Keyboard Navigation | All interactive elements tabbable  |
+| Screen Reader       | ARIA labels on all elements        |
+| Alt Text            | All images have descriptive alt    |
+| Skip Links          | Skip to main content link          |
+| Form Labels         | All inputs have associated labels  |
+
+### Keyboard Shortcuts
+
+| Action        | Shortcut |
+| ------------- | -------- |
+| New Complaint | Alt + N  |
+| Search        | Alt + S  |
+| Dashboard     | Alt + D  |
+| Notifications | Alt + T  |
+| Profile       | Alt + P  |
+
+---
+
+## Responsive Behavior
+
+### Navigation
+
+| Screen Size         | Behavior                            |
+| ------------------- | ----------------------------------- |
+| Desktop (>1024px)   | Full sidebar always visible         |
+| Tablet (768-1024px) | Collapsible sidebar, hamburger menu |
+| Mobile (<768px)     | Bottom navigation, drawer menu      |
+
+### Content Grid
+
+| Screen Size | Columns | Card Layout              |
+| ----------- | ------- | ------------------------ |
+| Desktop     | 3-4     | Cards in grid            |
+| Tablet      | 2       | Cards in grid            |
+| Mobile      | 1       | Full-width stacked cards |
+
+### Tables
+
+| Screen Size | Behavior                            |
+| ----------- | ----------------------------------- |
+| Desktop     | Full table with all columns         |
+| Tablet      | Priority columns, horizontal scroll |
+| Mobile      | Card view instead of table rows     |
+
+---
+
+## Error Handling
+
+### Empty States
+
+**No Complaints:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│              📋                                 │
+│                                                 │
+│        No complaints yet                        │
+│                                                 │
+│   You haven't submitted any complaints.         │
+│   Click the button below to create one.         │
+│                                                 │
+│          [ + New Complaint ]                    │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**No Search Results:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│              🔍                                 │
+│                                                 │
+│        No results found                         │
+│                                                 │
+│   We couldn't find anything matching            │
+│   "your search term"                            │
+│                                                 │
+│   Try adjusting your search or filters.         │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+### Error States
+
+**Network Error:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│              ⚠️                                  │
+│                                                 │
+│        Connection Failed                        │
+│                                                 │
+│   Please check your internet connection         │
+│   and try again.                                │
+│                                                 │
+│          [ Retry ]                              │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## Theme Implementation
+
+### CSS Variables
+
+```css
+:root {
+	/* Light Theme */
+	--primary-color: #3f51b5;
+	--accent-color: #ff4081;
+	--background-color: #fafafa;
+	--surface-color: #ffffff;
+	--text-primary: #212121;
+	--text-secondary: #757575;
+	--border-color: #e0e0e0;
+	--success-color: #4caf50;
+	--warning-color: #ff9800;
+	--error-color: #f44336;
+}
+
+[data-theme="dark"] {
+	/* Dark Theme */
+	--primary-color: #7986cb;
+	--accent-color: #ff80ab;
+	--background-color: #121212;
+	--surface-color: #1e1e1e;
+	--text-primary: #e0e0e0;
+	--text-secondary: #9e9e9e;
+	--border-color: #424242;
+}
+```
+
+### Theme Toggle
+
+- Location: Header, right side
+- Style: Icon button (sun/moon)
+- Persistence: localStorage
+- Transition: 300ms smooth transition
+
+---
+
+## Performance Guidelines
+
+### Target Metrics
+
+| Metric                   | Target  |
+| ------------------------ | ------- |
+| First Contentful Paint   | < 1.5s  |
+| Largest Contentful Paint | < 2.5s  |
+| Time to Interactive      | < 3.5s  |
+| Cumulative Layout Shift  | < 0.1   |
+| First Input Delay        | < 100ms |
+
+### Optimization Strategies
+
+1. **Images**: WebP format, lazy loading, responsive sizes
+2. **Fonts**: Preload critical fonts, font-display: swap
+3. **JavaScript**: Code splitting, tree shaking
+4. **CSS**: Critical CSS inline, defer non-critical
+5. **Caching**: Service worker, browser caching
+
+---
+
+## Testing Checklist
+
+### Functional Testing
+
+- [ ] All forms validate correctly
+- [ ] Navigation works on all devices
+- [ ] Authentication flow complete
+- [ ] Role-based access enforced
+- [ ] File upload works
+
+### Accessibility Testing
+
+- [ ] Keyboard navigation works
+- [ ] Screen reader compatible
+- [ ] Color contrast passes
+- [ ] Focus indicators visible
+- [ ] Alt text on images
+
+### Responsive Testing
+
+- [ ] Mobile 320px works
+- [ ] Tablet 768px works
+- [ ] Desktop 1280px works
+- [ ] Orientation changes handled
+
+### Performance Testing
+
+- [ ] Lighthouse score > 90
+- [ ] Bundle size < 500KB
+- [ ] Images optimized
+- [ ] No layout shifts
