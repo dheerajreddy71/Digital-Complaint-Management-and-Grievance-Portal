@@ -70,11 +70,22 @@ export class AdminComplaintDetailComponent implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.snackBar.open(
-					error?.error?.message || "Failed to load staff members",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Load staff members error:", error);
+
+				let errorMessage = "Failed to load staff members";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 403) {
+					errorMessage = "Access denied. Admin privileges required.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 	}
@@ -91,9 +102,24 @@ export class AdminComplaintDetailComponent implements OnInit {
 				}
 				this.isLoading = false;
 			},
-			error: () => {
-				this.snackBar.open("Failed to load complaint", "Close", {
-					duration: 3000,
+			error: (error) => {
+				console.error("Load complaint error:", error);
+
+				let errorMessage = "Failed to load complaint";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 404) {
+					errorMessage = "Complaint not found.";
+				} else if (error?.status === 403) {
+					errorMessage = "Access denied. Admin privileges required.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
 				});
 				this.isLoading = false;
 				this.router.navigate(["/admin"]);
@@ -151,12 +177,25 @@ export class AdminComplaintDetailComponent implements OnInit {
 					this.isUpdating = false;
 				},
 				error: (error) => {
-					this.snackBar.open(
-						error?.error?.message || "Failed to update complaint",
-						"Close",
-						{ duration: 5000, panelClass: ["error-snackbar"] }
-					);
 					this.isUpdating = false;
+					console.error("Update complaint error:", error);
+
+					let errorMessage = "Failed to update complaint";
+					if (error?.error?.message) {
+						errorMessage = error.error.message;
+					} else if (error?.status === 0) {
+						errorMessage =
+							"Cannot connect to server. Please check your internet connection.";
+					} else if (error?.status === 404) {
+						errorMessage = "Complaint not found.";
+					} else if (error?.status === 403) {
+						errorMessage = "Access denied. Admin privileges required.";
+					}
+
+					this.snackBar.open(errorMessage, "Close", {
+						duration: 8000,
+						panelClass: ["error-snackbar"],
+					});
 				},
 			});
 	}

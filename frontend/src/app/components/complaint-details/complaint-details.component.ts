@@ -105,11 +105,25 @@ export class ComplaintDetailsComponent implements OnInit {
 			},
 			error: (error) => {
 				this.isLoading = false;
-				this.snackBar.open(
-					error?.error?.message || "Failed to load complaint details",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Load complaint error:", error);
+
+				let errorMessage = "Failed to load complaint details";
+
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 404) {
+					errorMessage = "Complaint not found.";
+				} else if (error?.status === 403) {
+					errorMessage = "You don't have permission to view this complaint.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 				this.router.navigate(["/complaints"]);
 			},
 		});
@@ -136,11 +150,27 @@ export class ComplaintDetailsComponent implements OnInit {
 			},
 			error: (error) => {
 				this.isSubmitting = false;
-				this.snackBar.open(
-					error?.error?.message || "Failed to submit complaint",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Complaint submission error:", error);
+
+				let errorMessage = "Failed to submit complaint";
+
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 400) {
+					errorMessage =
+						error?.error?.message ||
+						"Invalid complaint data. Please check all fields.";
+				} else if (error?.status === 401) {
+					errorMessage = "Session expired. Please login again.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 	}
@@ -178,11 +208,23 @@ export class ComplaintDetailsComponent implements OnInit {
 				},
 				error: (error) => {
 					this.isSubmitting = false;
-					this.snackBar.open(
-						error?.error?.message || "Failed to submit feedback",
-						"Close",
-						{ duration: 5000, panelClass: ["error-snackbar"] }
-					);
+					console.error("Feedback submission error:", error);
+
+					let errorMessage = "Failed to submit feedback";
+
+					if (error?.error?.message) {
+						errorMessage = error.error.message;
+					} else if (error?.status === 0) {
+						errorMessage =
+							"Cannot connect to server. Please check your internet connection.";
+					} else if (error?.status === 404) {
+						errorMessage = "Complaint not found.";
+					}
+
+					this.snackBar.open(errorMessage, "Close", {
+						duration: 8000,
+						panelClass: ["error-snackbar"],
+					});
 				},
 			});
 	}

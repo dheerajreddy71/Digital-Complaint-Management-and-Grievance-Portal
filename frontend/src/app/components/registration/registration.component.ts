@@ -99,11 +99,33 @@ export class RegistrationComponent {
 			},
 			error: (error) => {
 				this.isLoading = false;
-				this.snackBar.open(
-					error?.error?.message || "Registration failed. Please try again.",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Registration error:", error);
+
+				let errorMessage = "Registration failed. Please try again.";
+
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.error?.errors && Array.isArray(error.error.errors)) {
+					// Validation errors from backend
+					errorMessage = error.error.errors
+						.map((e: any) => e.msg || e.message)
+						.join(", ");
+				} else if (error?.message) {
+					errorMessage = error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 409) {
+					errorMessage =
+						"Email already registered. Please use a different email or login.";
+				} else if (error?.status === 400) {
+					errorMessage = "Invalid registration data. Please check all fields.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 	}

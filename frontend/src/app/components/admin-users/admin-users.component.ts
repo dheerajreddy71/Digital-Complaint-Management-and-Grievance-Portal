@@ -64,10 +64,22 @@ export class AdminUsersComponent implements OnInit {
 				}
 				this.isLoading = false;
 			},
-			error: () => {
+			error: (error) => {
 				this.isLoading = false;
-				this.snackBar.open("Failed to load users", "Close", {
-					duration: 3000,
+				console.error("Load users error:", error);
+
+				let errorMessage = "Failed to load users";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 403) {
+					errorMessage = "Access denied. Admin privileges required.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
 					panelClass: ["error-snackbar"],
 				});
 			},

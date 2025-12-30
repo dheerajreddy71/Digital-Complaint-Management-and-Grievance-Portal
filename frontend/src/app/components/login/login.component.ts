@@ -65,12 +65,25 @@ export class LoginComponent implements OnInit {
 			},
 			error: (error) => {
 				this.isLoading = false;
-				this.snackBar.open(
-					error?.error?.message ||
-						"Login failed. Please check your credentials.",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Login error:", error);
+
+				let errorMessage = "Login failed. Please check your credentials.";
+
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 401) {
+					errorMessage = "Invalid email or password. Please try again.";
+				} else if (error?.status === 429) {
+					errorMessage = "Too many login attempts. Please try again later.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 	}

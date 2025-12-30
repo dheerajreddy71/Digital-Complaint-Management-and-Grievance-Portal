@@ -58,9 +58,24 @@ export class StaffComplaintDetailComponent implements OnInit {
 				}
 				this.isLoading = false;
 			},
-			error: () => {
-				this.snackBar.open("Failed to load complaint", "Close", {
-					duration: 3000,
+			error: (error) => {
+				console.error("Load complaint error:", error);
+
+				let errorMessage = "Failed to load complaint";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 404) {
+					errorMessage = "Complaint not found.";
+				} else if (error?.status === 403) {
+					errorMessage = "Not assigned to you or access denied.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
 				});
 				this.isLoading = false;
 				this.router.navigate(["/staff"]);
@@ -118,12 +133,25 @@ export class StaffComplaintDetailComponent implements OnInit {
 					this.isUpdating = false;
 				},
 				error: (error) => {
-					this.snackBar.open(
-						error?.error?.message || "Failed to update complaint",
-						"Close",
-						{ duration: 5000, panelClass: ["error-snackbar"] }
-					);
 					this.isUpdating = false;
+					console.error("Update complaint error:", error);
+
+					let errorMessage = "Failed to update complaint";
+					if (error?.error?.message) {
+						errorMessage = error.error.message;
+					} else if (error?.status === 0) {
+						errorMessage =
+							"Cannot connect to server. Please check your internet connection.";
+					} else if (error?.status === 404) {
+						errorMessage = "Complaint not found.";
+					} else if (error?.status === 403) {
+						errorMessage = "Not assigned to you or access denied.";
+					}
+
+					this.snackBar.open(errorMessage, "Close", {
+						duration: 8000,
+						panelClass: ["error-snackbar"],
+					});
 				},
 			});
 	}

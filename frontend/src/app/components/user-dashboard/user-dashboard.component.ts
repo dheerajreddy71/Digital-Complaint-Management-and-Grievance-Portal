@@ -52,11 +52,22 @@ export class UserDashboardComponent implements OnInit {
 			},
 			error: (error) => {
 				this.isLoading = false;
-				this.snackBar.open(
-					error?.error?.message || "Failed to load complaints",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Load complaints error:", error);
+
+				let errorMessage = "Failed to load complaints";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 401) {
+					errorMessage = "Session expired. Please login again.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 	}

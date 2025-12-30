@@ -126,11 +126,22 @@ export class AdminDashboardComponent implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.snackBar.open(
-					error?.error?.message || "Failed to load complaints",
-					"Close",
-					{ duration: 5000, panelClass: ["error-snackbar"] }
-				);
+				console.error("Load complaints error:", error);
+
+				let errorMessage = "Failed to load complaints";
+				if (error?.error?.message) {
+					errorMessage = error.error.message;
+				} else if (error?.status === 0) {
+					errorMessage =
+						"Cannot connect to server. Please check your internet connection.";
+				} else if (error?.status === 403) {
+					errorMessage = "Access denied. Admin privileges required.";
+				}
+
+				this.snackBar.open(errorMessage, "Close", {
+					duration: 8000,
+					panelClass: ["error-snackbar"],
+				});
 			},
 		});
 
@@ -427,15 +438,15 @@ export class AdminDashboardComponent implements OnInit {
 			const staffComplaints = this.complaints.filter(
 				(c) => c.staff_id === staff.id
 			);
-			
+
 			// Count resolved complaints
 			const resolved = staffComplaints.filter((c) => c.status === "Resolved");
-			
+
 			// Count complaints with ratings
 			const ratedComplaints = resolved.filter(
 				(c) => c.feedback_rating && c.feedback_rating > 0
 			);
-			
+
 			// Calculate average rating
 			const avgRating =
 				ratedComplaints.length > 0
@@ -457,7 +468,7 @@ export class AdminDashboardComponent implements OnInit {
 				avgRating: Math.round(avgRating * 10) / 10,
 			};
 		});
-		
+
 		this.filteredStaffStats = [...this.staffStats];
 		this.updatePagedStaffStats();
 	}
