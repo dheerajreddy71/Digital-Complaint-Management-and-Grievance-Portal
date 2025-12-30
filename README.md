@@ -35,6 +35,7 @@ The Digital Complaint Management Portal is a modern web application designed to 
 ## ✨ Features
 
 ### For Users
+
 - Register and submit complaints with detailed descriptions
 - Upload supporting documents/images
 - Track complaint status in real-time
@@ -43,6 +44,7 @@ The Digital Complaint Management Portal is a modern web application designed to 
 - Personal dashboard with complaint history
 
 ### For Staff Members
+
 - View assigned complaints filtered by department
 - Update complaint status (Assigned → In-progress → Resolved)
 - Add resolution notes and responses
@@ -51,6 +53,7 @@ The Digital Complaint Management Portal is a modern web application designed to 
 - Department-specific complaint filtering
 
 ### For Administrators
+
 - Comprehensive overview dashboard with analytics
 - Manage all users (promote users to staff, assign departments)
 - Manually assign complaints to staff members
@@ -61,6 +64,7 @@ The Digital Complaint Management Portal is a modern web application designed to 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Angular 16
 - **UI Library**: Angular Material
 - **Language**: TypeScript 5.x
@@ -70,6 +74,7 @@ The Digital Complaint Management Portal is a modern web application designed to 
 - **Package Manager**: pnpm
 
 ### Backend
+
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js
 - **Language**: TypeScript
@@ -117,37 +122,73 @@ pnpm install
 
 ### Backend Configuration
 
-Create a `.env` file in the `backend` directory:
+The backend supports two environment configurations:
+
+#### For Local Development (`.env`)
+
+Create `.env` file in the `backend` directory:
 
 ```env
 # Server Configuration
-PORT=3000
 NODE_ENV=development
+PORT=3000
 
-# Database Configuration
+# Local MySQL Database
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your_mysql_password
-DB_NAME=complaint_management
+DB_NAME=complaint_db
 
 # JWT Configuration
 JWT_SECRET=your_super_secret_jwt_key_change_in_production_min_32_chars
-JWT_EXPIRES_IN=7d
 
-# File Upload Configuration
-UPLOAD_DIR=uploads
-MAX_FILE_SIZE=5242880
+# CORS Configuration
+CORS_ORIGIN=http://localhost:4200
 ```
+
+#### For Cloud Deployment (`.env.aiven`)
+
+For Render/production deployment with Aiven MySQL:
+
+```env
+# Server Configuration
+NODE_ENV=production
+PORT=5000
+
+# Aiven MySQL Cloud Database
+DB_HOST=your-aiven-host.aivencloud.com
+DB_PORT=16109
+DB_USER=avnadmin
+DB_PASSWORD=your_aiven_password
+DB_NAME=defaultdb
+
+# JWT Configuration
+JWT_SECRET=your_production_secret_key_min_32_chars
+
+# CORS Configuration
+CORS_ORIGIN=https://your-frontend-url.vercel.app
+```
+
+> **Note**: Copy `.env.aiven` to `.env` when deploying to production
 
 ### Frontend Configuration
 
-Update `frontend/src/environments/environment.ts`:
+#### Local Development (`environment.ts`)
 
 ```typescript
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api'
+	production: false,
+	apiUrl: "http://localhost:3000/api",
+};
+```
+
+#### Production (`environment.prod.ts`)
+
+```typescript
+export const environment = {
+	production: true,
+	apiUrl: "https://digital-complaint-management-and.onrender.com/api",
 };
 ```
 
@@ -160,8 +201,8 @@ mysql -u root -p
 ```
 
 ```sql
-CREATE DATABASE complaint_management;
-USE complaint_management;
+CREATE DATABASE complaint_db;
+USE complaint_db;
 ```
 
 ### 2. Run Migrations
@@ -183,10 +224,11 @@ pnpm seed
 ```
 
 This creates:
+
 - 1 Admin user
-- 6 Staff members (across different departments)
-- 10 Regular users
-- 30 Sample complaints with various statuses
+- 14 Staff members (across different departments: Plumbing, Electrical, Facility, IT, Cleaning, Security)
+- 3 Regular users
+- 18 Sample complaints with various statuses
 
 ## 🏃 Running the Application
 
@@ -199,7 +241,7 @@ cd backend
 pnpm dev
 ```
 
-Backend runs on: `http://localhost:3000`
+Backend runs on: `http://localhost:3000` (Local) or `http://localhost:5000` (Production with Aiven)
 
 #### Start Frontend Server
 
@@ -234,44 +276,46 @@ Serve the `frontend/dist` folder using a web server (nginx, Apache, etc.)
 After running the seed script, use these credentials:
 
 ### Administrator Account
+
 ```
-Email: admin@system.com
-Password: Admin@123
+Email: admin@portal.com
+Password: Admin123!
 Role: Admin
 Access: Full system access, user management, analytics
 ```
 
-### Staff Members
+### Staff Members (All passwords: Staff123!)
 
-| Name | Email | Password | Department | Access |
-|------|-------|----------|------------|--------|
-| Sarah Johnson | sarah.johnson@staff.com | Staff@123 | Plumbing | Plumbing complaints |
-| Mike Chen | mike.chen@staff.com | Staff@123 | Electrical | Electrical complaints |
-| Emily Davis | emily.davis@staff.com | Staff@123 | Facility | Facility complaints |
-| David Wilson | david.wilson@staff.com | Staff@123 | IT | IT & Security complaints |
-| Lisa Anderson | lisa.anderson@staff.com | Staff@123 | Cleaning | Cleaning complaints |
-| James Taylor | james.taylor@staff.com | Staff@123 | Security | Security complaints |
+| Name              | Email                          | Department  | Access                      |
+| ----------------- | ------------------------------ | ----------- | --------------------------- |
+| Robert Johnson    | robert.plumber@portal.com      | Plumbing    | Plumbing complaints         |
+| Sarah Williams    | sarah.plumber@portal.com       | Plumbing    | Plumbing complaints         |
+| Michael Brown     | michael.electric@portal.com    | Electrical  | Electrical complaints       |
+| Emily Davis       | emily.electric@portal.com      | Electrical  | Electrical complaints       |
+| James Wilson      | james.electric@portal.com      | Electrical  | Electrical complaints       |
+| David Martinez    | david.facility@portal.com      | Facility    | Facility complaints         |
+| Lisa Anderson     | lisa.facility@portal.com       | Facility    | Facility complaints         |
+| Kevin Thompson    | kevin.it@portal.com            | IT          | IT complaints               |
+| Anna Garcia       | anna.it@portal.com             | IT          | IT complaints               |
+| Maria Santos      | maria.cleaning@portal.com      | Cleaning    | Cleaning complaints         |
+| Carlos Rivera     | carlos.cleaning@portal.com     | Cleaning    | Cleaning complaints         |
+| James Miller      | james.security@portal.com      | Security    | Security complaints         |
+| Patricia Johnson  | patricia.security@portal.com   | Security    | Security complaints         |
 
-### Regular Users
+### Regular Users (All passwords: User123!)
 
-| Name | Email | Password | Access |
-|------|-------|----------|--------|
-| John Smith | john.smith@example.com | User@123 | Submit & track complaints |
-| Emma Watson | emma.watson@example.com | User@123 | Submit & track complaints |
-| Oliver Robinson | oliver.robinson@example.com | User@123 | Submit & track complaints |
-| Sophia Martinez | sophia.martinez@example.com | User@123 | Submit & track complaints |
-| William Brown | william.brown@example.com | User@123 | Submit & track complaints |
-| Ava Garcia | ava.garcia@example.com | User@123 | Submit & track complaints |
-| Liam Miller | liam.miller@example.com | User@123 | Submit & track complaints |
-| Isabella Jones | isabella.jones@example.com | User@123 | Submit & track complaints |
-| Noah Davis | noah.davis@example.com | User@123 | Submit & track complaints |
-| Mia Rodriguez | mia.rodriguez@example.com | User@123 | Submit & track complaints |
+| Name            | Email                       | Access                    |
+| --------------- | --------------------------- | ------------------------- |
+| John Smith      | john.smith@example.com      | Submit & track complaints |
+| Emma Watson     | emma.watson@example.com     | Submit & track complaints |
+| Oliver Robinson | oliver.robinson@example.com | Submit & track complaints |
 
 ## 📚 API Documentation
 
 ### Authentication Endpoints
 
 #### Register User
+
 ```http
 POST /api/auth/register
 Content-Type: application/json
@@ -284,6 +328,7 @@ Content-Type: application/json
 ```
 
 #### Login
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -295,6 +340,7 @@ Content-Type: application/json
 ```
 
 #### Get Current User
+
 ```http
 GET /api/auth/me
 Authorization: Bearer <token>
@@ -303,6 +349,7 @@ Authorization: Bearer <token>
 ### Complaint Endpoints
 
 #### Create Complaint
+
 ```http
 POST /api/complaints
 Authorization: Bearer <token>
@@ -318,18 +365,21 @@ Content-Type: application/json
 ```
 
 #### Get All Complaints
+
 ```http
 GET /api/complaints
 Authorization: Bearer <token>
 ```
 
 #### Get Complaint by ID
+
 ```http
 GET /api/complaints/:id
 Authorization: Bearer <token>
 ```
 
 #### Update Complaint Status (Staff/Admin)
+
 ```http
 PUT /api/complaints/:id/status
 Authorization: Bearer <token>
@@ -341,6 +391,7 @@ Content-Type: application/json
 ```
 
 #### Assign Complaint (Admin)
+
 ```http
 PUT /api/complaints/:id/assign
 Authorization: Bearer <token>
@@ -352,6 +403,7 @@ Content-Type: application/json
 ```
 
 #### Add Resolution Notes (Staff)
+
 ```http
 PUT /api/complaints/:id/resolve
 Authorization: Bearer <token>
@@ -364,6 +416,7 @@ Content-Type: application/json
 ```
 
 #### Submit Feedback (User)
+
 ```http
 POST /api/complaints/:id/feedback
 Authorization: Bearer <token>
@@ -378,12 +431,14 @@ Content-Type: application/json
 ### User Management Endpoints (Admin Only)
 
 #### Get All Users
+
 ```http
 GET /api/users
 Authorization: Bearer <token>
 ```
 
 #### Update User Role
+
 ```http
 PATCH /api/users/:id
 Authorization: Bearer <token>
@@ -396,6 +451,7 @@ Content-Type: application/json
 ```
 
 #### Get Staff Members
+
 ```http
 GET /api/users/staff
 Authorization: Bearer <token>
@@ -404,6 +460,7 @@ Authorization: Bearer <token>
 ### File Upload
 
 #### Upload Complaint Attachment
+
 ```http
 POST /api/upload
 Authorization: Bearer <token>
@@ -498,24 +555,28 @@ complaint-management/
 ## 🔒 Security Features
 
 ### Authentication & Authorization
+
 - **JWT Tokens**: Secure token-based authentication
 - **Password Hashing**: bcrypt with salt rounds
 - **Role-Based Access**: Fine-grained permission control
 - **Protected Routes**: Frontend and backend route guards
 
 ### Input Validation
+
 - **Request Validation**: Schema-based validation middleware
 - **XSS Prevention**: Input sanitization
 - **SQL Injection Protection**: Parameterized queries
 - **File Upload Validation**: Type and size restrictions
 
 ### Security Headers
+
 - **Helmet.js**: Security headers middleware
 - **CORS**: Configured cross-origin resource sharing
 - **Rate Limiting**: Prevent brute force attacks
 - **Request ID Tracking**: Audit trail
 
 ### Data Protection
+
 - **Environment Variables**: Sensitive data in .env
 - **Secure Password Policy**: Minimum requirements enforced
 - **Session Management**: Token expiration and renewal
@@ -523,6 +584,7 @@ complaint-management/
 ## 🎨 UI/UX Features
 
 ### Design Principles
+
 - **Material Design**: Angular Material components
 - **Responsive Layout**: Mobile-first approach
 - **Glassmorphism**: Modern frosted-glass effects
@@ -530,6 +592,7 @@ complaint-management/
 - **Microinteractions**: Smooth animations and transitions
 
 ### User Experience
+
 - **Loading States**: Skeleton screens and spinners
 - **Error Handling**: User-friendly error messages
 - **Empty States**: Guidance for no-data scenarios
@@ -550,12 +613,14 @@ complaint-management/
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd backend
 pnpm test
 ```
 
 ### Frontend Tests
+
 ```bash
 cd frontend
 pnpm test
@@ -564,6 +629,7 @@ pnpm test
 ## 🐛 Known Issues & Future Enhancements
 
 ### Planned Features
+
 - [ ] Email notifications for complaint updates
 - [ ] SMS alerts for critical complaints
 - [ ] Advanced analytics and reporting
@@ -575,6 +641,7 @@ pnpm test
 - [ ] Push notifications
 
 ### Known Limitations
+
 - File upload limited to 5MB
 - Single file per complaint
 - No real-time updates (requires refresh)
@@ -598,7 +665,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Dheeraj Reddy**
 
 - GitHub: [@dheerajreddy71](https://github.com/dheerajreddy71)
-- Email: dheerajreddy71@example.com
 
 ## 🙏 Acknowledgments
 
@@ -609,7 +675,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-For support, email dheerajreddy71@example.com or open an issue in the GitHub repository.
+For support, open an issue in the GitHub repository or contact via GitHub.
 
 ---
 

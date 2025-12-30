@@ -37,14 +37,26 @@ export class AuthInterceptor implements HttpInterceptor {
 		return next.handle(request).pipe(
 			catchError((error: HttpErrorResponse) => {
 				let errorMessage = "An unexpected error occurred";
+				let showSnackbar = true;
 
 				if (error.error instanceof ErrorEvent) {
 					errorMessage = error.error.message;
 				} else {
 					switch (error.status) {
 						case 401:
-							errorMessage = "Session expired. Please login again.";
-							this.authService.logout();
+							// Only logout and show "session expired" for authenticated requests (not login)
+							if (
+								request.url.includes("/auth/login") ||
+								request.url.includes("/auth/register")
+							) {
+								// For login/register, use the backend error message
+								errorMessage = error.error?.message || "Invalid credentials";
+								showSnackbar = false; // Let the component handle the error message
+							} else {
+								// For other authenticated requests, session has expired
+								errorMessage = "Session expired. Please login again.";
+								this.authService.logout();
+							}
 							break;
 						case 403:
 							errorMessage = error.error?.message || "Access denied";
@@ -72,12 +84,14 @@ export class AuthInterceptor implements HttpInterceptor {
 					}
 				}
 
-				this.snackBar.open(errorMessage, "Close", {
-					duration: 5000,
-					horizontalPosition: "end",
-					verticalPosition: "top",
-					panelClass: ["error-snackbar"],
-				});
+				if (showSnackbar) {
+					this.snackBar.open(errorMessage, "Close", {
+						duration: 5000,
+						horizontalPosition: "end",
+						verticalPosition: "top",
+						panelClass: ["error-snackbar"],
+					});
+				}
 
 				return throwError(() => error);
 			})

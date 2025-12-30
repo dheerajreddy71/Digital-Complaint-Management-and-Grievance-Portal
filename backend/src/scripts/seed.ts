@@ -32,21 +32,56 @@ async function seedDatabase(): Promise<void> {
 
 	const connection = await mysql.createConnection({
 		host: config.database.host,
+		port: config.database.port,
 		user: config.database.user,
 		password: config.database.password,
 		database: config.database.name,
+		ssl: { rejectUnauthorized: false },
 	});
 
 	try {
-		// Add department column if it doesn't exist
-		try {
-			await connection.query(
-				`ALTER TABLE users ADD COLUMN IF NOT EXISTS department VARCHAR(50) DEFAULT NULL AFTER role`
-			);
-			console.log("Department column ensured");
-		} catch (e) {
-			/* Column may already exist */
-		}
+		console.log("\nCreating database tables...");
+
+		// Create Users Table
+		await connection.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                role ENUM('User', 'Staff', 'Admin') NOT NULL DEFAULT 'User',
+                department VARCHAR(50) DEFAULT NULL,
+                contact_info VARCHAR(100),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+		console.log("✅ Users table created");
+
+		// Create Complaints Table
+		await connection.query(`
+            CREATE TABLE IF NOT EXISTS complaints (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                staff_id INT DEFAULT NULL,
+                title VARCHAR(200) NOT NULL,
+                description TEXT NOT NULL,
+                category ENUM('plumbing', 'electrical', 'facility', 'cleaning', 'security', 'other') NOT NULL,
+                priority ENUM('Low', 'Medium', 'High', 'Critical') DEFAULT 'Medium',
+                location VARCHAR(200) DEFAULT NULL,
+                status ENUM('Open', 'Assigned', 'In-progress', 'Resolved') DEFAULT 'Open',
+                attachments VARCHAR(500) DEFAULT NULL,
+                resolution_notes TEXT DEFAULT NULL,
+                feedback TEXT DEFAULT NULL,
+                feedback_rating INT DEFAULT NULL,
+                deadline_at TIMESTAMP DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (staff_id) REFERENCES users(id) ON DELETE SET NULL
+            )
+        `);
+		console.log("✅ Complaints table created");
 
 		// Check existing users
 		const [existingUsers] = await connection.query(

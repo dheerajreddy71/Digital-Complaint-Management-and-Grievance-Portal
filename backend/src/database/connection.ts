@@ -4,12 +4,16 @@ import logger from "../utils/logger";
 
 const pool = mysql.createPool({
 	host: config.database.host,
+	port: config.database.port,
 	user: config.database.user,
 	password: config.database.password,
 	database: config.database.name,
 	waitForConnections: true,
 	connectionLimit: 10,
 	queueLimit: 0,
+	ssl: {
+		rejectUnauthorized: false,
+	},
 });
 
 // Helper to safely add index (ignores if already exists)
@@ -36,8 +40,12 @@ export async function initializeDatabase(): Promise<void> {
 	try {
 		const connection = await mysql.createConnection({
 			host: config.database.host,
+			port: config.database.port,
 			user: config.database.user,
 			password: config.database.password,
+			ssl: {
+				rejectUnauthorized: false,
+			},
 		});
 
 		await connection.query(
