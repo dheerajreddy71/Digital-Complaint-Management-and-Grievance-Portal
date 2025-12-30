@@ -234,8 +234,8 @@
 						(ngModelChange)="applyFilters()"
 					>
 						<mat-option value="all">All Priorities</mat-option>
-						<mat-option *ngFor="let p of PRIORITY_OPTIONS" [value]="p">{{
-							p
+						<mat-option *ngFor="let p of PRIORITY_OPTIONS" [value]="p.value">{{
+							p.label
 						}}</mat-option>
 					</mat-select>
 				</mat-form-field>

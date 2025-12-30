@@ -115,7 +115,8 @@ export class AdminDashboardComponent implements OnInit {
 	loadData(): void {
 		this.isLoading = true;
 
-		this.complaintService.getComplaints().subscribe({
+		// Load all complaints with high limit for admin dashboard
+		this.complaintService.getComplaints({ limit: 100 }).subscribe({
 			next: (response) => {
 				if (response.success && response.complaints) {
 					this.complaints = response.complaints;
@@ -422,13 +423,20 @@ export class AdminDashboardComponent implements OnInit {
 		if (!this.staffMembers.length) return;
 
 		this.staffStats = this.staffMembers.map((staff) => {
+			// Filter all complaints assigned to this staff member
 			const staffComplaints = this.complaints.filter(
 				(c) => c.staff_id === staff.id
 			);
+			
+			// Count resolved complaints
 			const resolved = staffComplaints.filter((c) => c.status === "Resolved");
+			
+			// Count complaints with ratings
 			const ratedComplaints = resolved.filter(
 				(c) => c.feedback_rating && c.feedback_rating > 0
 			);
+			
+			// Calculate average rating
 			const avgRating =
 				ratedComplaints.length > 0
 					? ratedComplaints.reduce(
@@ -449,6 +457,7 @@ export class AdminDashboardComponent implements OnInit {
 				avgRating: Math.round(avgRating * 10) / 10,
 			};
 		});
+		
 		this.filteredStaffStats = [...this.staffStats];
 		this.updatePagedStaffStats();
 	}
