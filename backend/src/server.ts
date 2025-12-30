@@ -33,10 +33,25 @@ app.use(
 // Response compression
 app.use(compression());
 
-// CORS configuration
+// CORS configuration - Support multiple origins for local and production
+const allowedOrigins = [
+	"http://localhost:4200",
+	"https://dcmgp.vercel.app",
+	process.env.CORS_ORIGIN,
+].filter(Boolean);
+
 app.use(
 	cors({
-		origin: process.env.CORS_ORIGIN || "http://localhost:4200",
+		origin: (origin, callback) => {
+			// Allow requests with no origin (like mobile apps or curl requests)
+			if (!origin) return callback(null, true);
+
+			if (allowedOrigins.includes(origin)) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
 		credentials: true,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization", "X-Request-ID"],

@@ -286,21 +286,21 @@ Access: Full system access, user management, analytics
 
 ### Staff Members (All passwords: Staff123!)
 
-| Name              | Email                          | Department  | Access                      |
-| ----------------- | ------------------------------ | ----------- | --------------------------- |
-| Robert Johnson    | robert.plumber@portal.com      | Plumbing    | Plumbing complaints         |
-| Sarah Williams    | sarah.plumber@portal.com       | Plumbing    | Plumbing complaints         |
-| Michael Brown     | michael.electric@portal.com    | Electrical  | Electrical complaints       |
-| Emily Davis       | emily.electric@portal.com      | Electrical  | Electrical complaints       |
-| James Wilson      | james.electric@portal.com      | Electrical  | Electrical complaints       |
-| David Martinez    | david.facility@portal.com      | Facility    | Facility complaints         |
-| Lisa Anderson     | lisa.facility@portal.com       | Facility    | Facility complaints         |
-| Kevin Thompson    | kevin.it@portal.com            | IT          | IT complaints               |
-| Anna Garcia       | anna.it@portal.com             | IT          | IT complaints               |
-| Maria Santos      | maria.cleaning@portal.com      | Cleaning    | Cleaning complaints         |
-| Carlos Rivera     | carlos.cleaning@portal.com     | Cleaning    | Cleaning complaints         |
-| James Miller      | james.security@portal.com      | Security    | Security complaints         |
-| Patricia Johnson  | patricia.security@portal.com   | Security    | Security complaints         |
+| Name             | Email                        | Department | Access                |
+| ---------------- | ---------------------------- | ---------- | --------------------- |
+| Robert Johnson   | robert.plumber@portal.com    | Plumbing   | Plumbing complaints   |
+| Sarah Williams   | sarah.plumber@portal.com     | Plumbing   | Plumbing complaints   |
+| Michael Brown    | michael.electric@portal.com  | Electrical | Electrical complaints |
+| Emily Davis      | emily.electric@portal.com    | Electrical | Electrical complaints |
+| James Wilson     | james.electric@portal.com    | Electrical | Electrical complaints |
+| David Martinez   | david.facility@portal.com    | Facility   | Facility complaints   |
+| Lisa Anderson    | lisa.facility@portal.com     | Facility   | Facility complaints   |
+| Kevin Thompson   | kevin.it@portal.com          | IT         | IT complaints         |
+| Anna Garcia      | anna.it@portal.com           | IT         | IT complaints         |
+| Maria Santos     | maria.cleaning@portal.com    | Cleaning   | Cleaning complaints   |
+| Carlos Rivera    | carlos.cleaning@portal.com   | Cleaning   | Cleaning complaints   |
+| James Miller     | james.security@portal.com    | Security   | Security complaints   |
+| Patricia Johnson | patricia.security@portal.com | Security   | Security complaints   |
 
 ### Regular Users (All passwords: User123!)
 

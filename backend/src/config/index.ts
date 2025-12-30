@@ -5,6 +5,7 @@ dotenv.config();
 interface Config {
 	port: number;
 	nodeEnv: string;
+	corsOrigin: string;
 	database: {
 		host: string;
 		port: number;
@@ -63,6 +64,7 @@ const generateDevSecret = (): string => {
 const config: Config = {
 	port: parseInt(process.env.PORT || "3000", 10),
 	nodeEnv: process.env.NODE_ENV || "development",
+	corsOrigin: process.env.CORS_ORIGIN || "http://localhost:4200",
 	database: {
 		host: process.env.DB_HOST || "localhost",
 		port: parseInt(process.env.DB_PORT || "3306", 10),
